@@ -1,0 +1,29 @@
+---
+services:
+  wormhole:
+    image: wormhole
+    build:
+      context: .
+      dockerfile: ./compose/Dockerfile.app
+    volumes:
+      - "./wormhole:/code/app"
+      - "./compose/data:/mirror"
+    networks:
+      - wormhole_net
+  webserver:
+    image: webserver
+    build:
+      context: ./compose
+      dockerfile: Dockerfile.nginx
+    volumes:
+      - "./compose/data:/data/ansible/web/download:ro"
+    ports:
+      - "80:80"
+    networks:
+      - wormhole_net
+
+networks:
+  wormhole_net:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1337
