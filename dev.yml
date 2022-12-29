@@ -10,13 +10,22 @@ services:
       - "./compose/data:/mirror"
     networks:
       - wormhole_net
+    command:
+      - "uvicorn"
+      - "app.main:app"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "80"
+      #- "--root-path"  # use these two lines if you are running behind a proxy
+      #- "/wormhole"     # that uses a subpath, needs to be different from the download subpath
   webserver:
     image: webserver
     build:
       context: ./compose
       dockerfile: Dockerfile.nginx
     volumes:
-      - "./compose/data:/data/ansible/web/download:ro"
+      - "./compose/data:/data/ansible:ro"
     ports:
       - "80:80"
     networks:

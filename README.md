@@ -35,3 +35,27 @@ validate_certs=false
 [galaxy_server.official]
 url=https://galaxy.ansible.com/
 ```
+
+## behind a proxy
+
+If you are using a proxy with a subpath, have a look at the dev.yml file.
+An matching example nginx config might look like this:
+
+```sh
+    [...]
+    upstream wormhole {
+        server wormhole:80;
+    }
+
+    server {
+        [...]
+        ## wormhole
+        location /wormhole/ {
+            proxy_pass http://wormhole/;
+        }
+        location /ansible {
+            default_type        application/json;
+        }
+```
+
+Keep an eye on the trailing backslash in the location and proxy_pass line. Without them it will probably not work.
