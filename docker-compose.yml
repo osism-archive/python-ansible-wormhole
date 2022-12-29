@@ -15,7 +15,7 @@ services:
       context: ./compose
       dockerfile: Dockerfile.nginx
     volumes:
-      - "data:/data/ansible/web/download:ro"
+      - "data:/data/ansible:ro"
     ports:
       - "80:80"
     networks:

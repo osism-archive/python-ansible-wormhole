@@ -1,7 +1,7 @@
 FROM nginx
 
-# Default config expects bind mount / volume @ /data/wormhole/web
-RUN mkdir -p /data/wormhole/web/download/
+# Default config expects bind mount / volume @ /data/ansible/
+RUN mkdir -p /data/ansible/
 RUN mkdir /config
 COPY nginx.conf /config
 
