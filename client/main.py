@@ -1,10 +1,13 @@
 import requests
 import typer
+import os
 
 from typing import List, Optional
 
 app = typer.Typer(help="Client to manage a ansible wormhole")
 version = "0.0.1"
+os.environ
+settings = {"api_url": os.getenv("WORMHOLE_ENDPOINT", "http://localhost")}
 
 
 @app.command("mirror")
@@ -21,7 +24,7 @@ def mirror(
 
     Example call: python3 main.py mirror osism.sonic osism.validations
     """
-    url = 'http://localhost/api/mirror'
+    url = f"{settings['api_url']}/ansible/api/mirror"
     payload = {
         "roles": roles,
         "collections": collections
@@ -40,6 +43,14 @@ def mirror(
 @app.command("version")
 def version():
     print(version)
+
+
+@app.callback()
+def generic(
+        url: Optional[str] = typer.Option(
+            "http://localhost", "-w", "--wormhole-endpoint"
+        )):
+    settings['api_url'] = url.strip("/")
 
 
 def main():
