@@ -1,0 +1,5 @@
+roles:
+  - geerlingguy.ansible
+collections:
+  - osism.validations
+  - osism.sonic
