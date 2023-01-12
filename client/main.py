@@ -28,7 +28,7 @@ def mirror(
 
     Example call: python3 main.py mirror osism.sonic osism.validations
     """
-    url = f"{settings['api_url']}/ansible/api/mirror"
+    url = f"{settings['api_url']}/api/mirror"
     if config_file != "":
         with open(config_file, "r") as file:
             data = yaml.safe_load(file)
