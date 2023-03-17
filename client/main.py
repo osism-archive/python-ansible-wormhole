@@ -3,6 +3,7 @@ import requests
 import typer
 import yaml
 
+from rich.progress import track
 from typing import List, Optional
 
 app = typer.Typer(help="Client to manage a ansible wormhole")
@@ -34,19 +35,49 @@ def mirror(
             data = yaml.safe_load(file)
         roles = roles + data["roles"]
         collections = collections + data["collections"]
-    payload = {
-        "roles": roles,
-        "collections": collections
-    }
-    result = requests.post(
-        url=url,
-        json=payload,
-        headers={
-            "accept": "application/json",
-            "Content-Type": "application/json"
-        }
-    )
-    print(result.text)
+
+    for role in track(roles, description="Processing Roles...", total=None):
+        result = requests.post(
+            url=url,
+            json={
+                "roles": [role],
+                "collections": []
+            },
+            headers={
+                "accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        )
+        print(f"{role}: {result.text}")
+    for collection in track(collections, description="Processing Collections...", total=None):
+        result = requests.post(
+            url=url,
+            json={
+                "roles": [],
+                "collections": [collection]
+            },
+            headers={
+                "accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        )
+        print(f"{collection}: {result.text}")
+
+    # The API is actually capable of handling all in just one call.
+    # But the progress bar is a benefit for the user in my opinion.
+    #payload = {
+    #    "roles": roles,
+    #    "collections": collections
+    #}
+    #result = requests.post(
+    #    url=url,
+    #    json=payload,
+    #    headers={
+    #        "accept": "application/json",
+    #        "Content-Type": "application/json"
+    #    }
+    #)
+    #print(result.text)
 
 
 @app.command("version")
