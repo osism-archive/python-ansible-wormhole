@@ -8,3 +8,7 @@
       jobs:
         - flake8
         - hadolint
+    periodic-daily:
+      jobs:
+        - flake8
+        - hadolint
